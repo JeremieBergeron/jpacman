@@ -13,6 +13,7 @@ import nl.tudelft.jpacman.sprite.Sprite;
  * @author Jeroen Roosen 
  */
 public class Player extends Unit {
+    static final int MAX_NBR_LIVE = 3;
 
     /**
      * The amount of points accumulated by this player.
@@ -30,9 +31,9 @@ public class Player extends Unit {
     private final AnimatedSprite deathSprite;
 
     /**
-     * <code>true</code> iff this player is alive.
+     * Nombre de vie restant
      */
-    private boolean alive;
+    private int numberOfLive;
 
     /**
      * {@link Unit} iff this player died by collision, <code>null</code> otherwise.
@@ -49,9 +50,9 @@ public class Player extends Unit {
      */
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
         this.score = 0;
-        this.alive = true;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
+        this.numberOfLive = MAX_NBR_LIVE;
         deathSprite.setAnimating(false);
     }
 
@@ -61,7 +62,7 @@ public class Player extends Unit {
      * @return <code>true</code> iff the player is alive.
      */
     public boolean isAlive() {
-        return alive;
+        return this.numberOfLive > 0;
     }
 
     /**
@@ -73,14 +74,16 @@ public class Player extends Unit {
      *            <code>true</code> iff this player is alive.
      */
     public void setAlive(boolean isAlive) {
-        if (isAlive) {
+        if (!isAlive) {
+            this.numberOfLive -= 1;
+        }
+
+        if (this.isAlive()) {
             deathSprite.setAnimating(false);
             this.killer = null;
-        }
-        if (!isAlive) {
+        } else {
             deathSprite.restart();
         }
-        this.alive = isAlive;
     }
 
     /**
