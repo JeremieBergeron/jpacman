@@ -271,7 +271,7 @@ public class Level {
      * Updates the observers about the state of this level.
      */
     private void updateObservers() {
-        if (!isAnyPlayerAlive() && players.get(0).getLives() <= 0) { // 1 joueur
+        if (!isAnyPlayerAlive()) { // 1 joueur
             for (LevelObserver observer : observers) {
                 observer.levelLost();
             }
