@@ -1,5 +1,6 @@
 package nl.tudelft.jpacman.level;
 
+import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.points.PointCalculator;
@@ -75,8 +76,18 @@ public class PlayerCollisions implements CollisionMap {
      */
     public void playerVersusGhost(Player player, Ghost ghost) {
         pointCalculator.collidedWithAGhost(player, ghost);
-        player.setAlive(false);
-        player.setKiller(ghost);
+        player.loseLife();
+        if (player.getLives() > 0) {
+            resetPlayerPosition(player); // Reset player position, assuming 'level' is accessible
+        } else {
+            player.setAlive(false); // Player loses the game if no lives are left
+            player.setKiller(ghost);  // Optional: Set the ghost as the killer, if needed
+        }
+    }
+
+    public void resetPlayerPosition(Player player) {
+        Square startSquare = Level.getDefaultStartingSquare(); // Assuming single-player mode
+        player.occupy(startSquare);
     }
 
     /**

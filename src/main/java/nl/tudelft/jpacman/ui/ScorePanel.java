@@ -33,7 +33,7 @@ public class ScorePanel extends JPanel {
      * The default way in which the score is shown.
      */
     public static final ScoreFormatter DEFAULT_SCORE_FORMATTER =
-        (Player player) -> String.format("Score: %3d", player.getScore());
+        (Player player) -> String.format("Score: %3d Lives:%d", player.getScore(), player.getLives());
 
     /**
      * The way to format the score information.
@@ -70,7 +70,7 @@ public class ScorePanel extends JPanel {
         for (Map.Entry<Player, JLabel> entry : scoreLabels.entrySet()) {
             Player player = entry.getKey();
             String score = "";
-            if (!player.isAlive()) {
+            if (!player.isAlive() && player.getLives()< 1) {
                 score = "You died. ";
             }
             score += scoreFormatter.format(player);

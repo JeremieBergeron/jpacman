@@ -14,10 +14,14 @@ import nl.tudelft.jpacman.sprite.Sprite;
  */
 public class Player extends Unit {
 
+    static int MAX_NUMBERS_OF_LIVES = 3;
+
     /**
      * The amount of points accumulated by this player.
      */
     private int score;
+
+    private int lives;
 
     /**
      * The animations for every direction.
@@ -42,13 +46,13 @@ public class Player extends Unit {
     /**
      * Creates a new player with a score of 0 points.
      *
-     * @param spriteMap
-     *            A map containing a sprite for this player for every direction.
-     * @param deathAnimation
-     *            The sprite to be shown when this player dies.
+     * @param spriteMap      A map containing a sprite for this player for every direction.
+     * @param deathAnimation The sprite to be shown when this player dies.
+     * @param startingLives
      */
-    protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
+    protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation, int startingLives) {
         this.score = 0;
+        this.lives = startingLives;
         this.alive = true;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
@@ -127,5 +131,20 @@ public class Player extends Unit {
      */
     public void addPoints(int points) {
         score += points;
+    }
+
+
+    public void loseLife() {
+        if (lives > 0) {
+            lives--;
+        }
+    }
+
+    public void addLife() {
+        lives++;
+    }
+
+    public int getLives() {
+        return lives;
     }
 }

@@ -78,6 +78,11 @@ public class Level {
      */
     private final Set<LevelObserver> observers;
 
+    private static Square defaultStartingSquare;
+
+
+
+
     /**
      * Creates a new level for the board.
      *
@@ -107,6 +112,9 @@ public class Level {
         this.players = new ArrayList<>();
         this.collisions = collisionMap;
         this.observers = new HashSet<>();
+        if (!startPositions.isEmpty()) {
+            defaultStartingSquare = startPositions.get(0);
+        }
     }
 
     /**
@@ -263,7 +271,7 @@ public class Level {
      * Updates the observers about the state of this level.
      */
     private void updateObservers() {
-        if (!isAnyPlayerAlive()) {
+        if (!isAnyPlayerAlive() && players.get(0).getLives() <= 0) { // 1 joueur
             for (LevelObserver observer : observers) {
                 observer.levelLost();
             }
@@ -371,5 +379,10 @@ public class Level {
          * this event is received.
          */
         void levelLost();
+    }
+
+
+    public static Square getDefaultStartingSquare() {
+        return defaultStartingSquare;
     }
 }
