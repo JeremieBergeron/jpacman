@@ -48,7 +48,7 @@ public class Player extends Unit {
      *
      * @param spriteMap      A map containing a sprite for this player for every direction.
      * @param deathAnimation The sprite to be shown when this player dies.
-     * @param startingLives
+     * @param startingLives The starting amount of lives.
      */
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation, int startingLives) {
         this.score = 0;
