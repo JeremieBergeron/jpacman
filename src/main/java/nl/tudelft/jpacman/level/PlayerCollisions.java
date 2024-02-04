@@ -19,16 +19,18 @@ import nl.tudelft.jpacman.points.PointCalculator;
 public class PlayerCollisions implements CollisionMap {
 
     private PointCalculator pointCalculator;
+    private Square defaultSquare;
 
     /**
      * Create a simple player-based collision map, informing the
      * point calculator about points to be added.
      *
-     * @param pointCalculator
-     *             Strategy for calculating points.
+     * @param pointCalculator Strategy for calculating points.
+     * @param defaultSquare The default square to return to when a collision occurs.
      */
-    public PlayerCollisions(PointCalculator pointCalculator) {
+    public PlayerCollisions(PointCalculator pointCalculator, Square defaultSquare) {
         this.pointCalculator = pointCalculator;
+        this.defaultSquare=defaultSquare;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class PlayerCollisions implements CollisionMap {
         pointCalculator.collidedWithAGhost(player, ghost);
         player.loseLife();
         if (player.getLives() > 0) {
-            resetPlayerPosition(player); // Reset player position, assuming 'level' is accessible
+            resetPlayerPosition(player);
         } else {
             player.setAlive(false); // Player loses the game if no lives are left
             player.setKiller(ghost);  // Optional: Set the ghost as the killer, if needed
@@ -86,8 +88,7 @@ public class PlayerCollisions implements CollisionMap {
     }
 
     public void resetPlayerPosition(Player player) {
-        Square startSquare = Level.getDefaultStartingSquare(); // Assuming single-player mode
-        player.occupy(startSquare);
+        player.occupy(defaultSquare);
     }
 
     /**
