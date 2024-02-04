@@ -112,9 +112,6 @@ public class Level {
         this.players = new ArrayList<>();
         this.collisions = collisionMap;
         this.observers = new HashSet<>();
-        if (!startPositions.isEmpty()) {
-            defaultStartingSquare = startPositions.get(0);
-        }
     }
 
     /**
