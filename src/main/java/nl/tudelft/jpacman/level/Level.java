@@ -305,19 +305,24 @@ public class Level {
      * @return The amount of pellets remaining on the board.
      */
     public int remainingPellets() {
+        int pellets = getBoardSquares().stream()
+            .flatMap(square -> square.getOccupants().stream())
+            .filter(unit -> unit instanceof Pellet)
+            .mapToInt(unit -> 1)
+            .sum();
+        assert pellets >=0;
+        return pellets;
+    }
+
+    private List<Square> getBoardSquares() {
         Board board = getBoard();
-        int pellets = 0;
+        List<Square> squares = new ArrayList<>();
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
-                for (Unit unit : board.squareAt(x, y).getOccupants()) {
-                    if (unit instanceof Pellet) {
-                        pellets++;
-                    }
-                }
+                squares.add(board.squareAt(x, y));
             }
         }
-        assert pellets >= 0;
-        return pellets;
+        return squares;
     }
 
     /**
