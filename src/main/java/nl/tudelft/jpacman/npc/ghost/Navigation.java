@@ -61,11 +61,14 @@ public final class Navigation {
                                       Set<Square> visited, Node node, Square square) {
         for (Direction direction : Direction.values()) {
             Square target = square.getSquareAt(direction);
-            if (!visited.contains(target)
-                && (traveller == null || target.isAccessibleTo(traveller))) {
+            if (isTargetValid(traveller, target, visited)) {
                 targets.add(new Node(direction, target, node));
             }
         }
+    }
+
+    private static boolean isTargetValid(Unit traveller, Square target, Set<Square> visited) {
+        return !visited.contains(target) && (traveller == null || target.isAccessibleTo(traveller));
     }
 
     /**
