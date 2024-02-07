@@ -1,14 +1,11 @@
 package nl.tudelft.jpacman;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Smoke test launching the full game,
  * and attempting to make a number of typical moves.
@@ -63,6 +60,7 @@ public class LauncherSmokeTest {
         game.start();
         assertThat(game.isInProgress()).isTrue();
         assertThat(player.getScore()).isZero();
+        assertThat(player.getLives()).isEqualTo(3);  // Verify Pacman starts with 3 lives
 
         // get points
         game.move(player, Direction.EAST);
@@ -90,14 +88,20 @@ public class LauncherSmokeTest {
         // Here we do it just to let the monsters move.
         Thread.sleep(500L);
 
-        // we're close to monsters, this will get us killed.
+        // we're close to monsters, this will get us "killed" but game continues as Pacman has more lives.
         move(game, Direction.WEST, 10);
         move(game, Direction.EAST, 10);
-        assertThat(player.isAlive()).isFalse();
+        assertThat(player.isAlive()).isTrue();  // Pacman should still be alive as he has multiple lives
+        assertThat(player.getLives()).isLessThan(3);  // Verify Pacman has lost a life
+        player.loseLife();  // Simulate Pacman losing a life
+        assertThat(player.getLives()).isEqualTo(1);  // Verify Pacman has 2 lives left
+        player.loseLife();  // Simulate Pacman losing a life
+        assertThat(player.getLives()).isEqualTo(0);  // Verify Pacman has 1 life left
 
         game.stop();
         assertThat(game.isInProgress()).isFalse();
     }
+
 
     /**
      * Make number of moves in given direction.

@@ -14,10 +14,14 @@ import nl.tudelft.jpacman.sprite.Sprite;
  */
 public class Player extends Unit {
 
+    static int MAX_NUMBERS_OF_LIVES = 3;
+
     /**
      * The amount of points accumulated by this player.
      */
     private int score;
+
+    private int lives;
 
     /**
      * The animations for every direction.
@@ -29,10 +33,6 @@ public class Player extends Unit {
      */
     private final AnimatedSprite deathSprite;
 
-    /**
-     * <code>true</code> iff this player is alive.
-     */
-    private boolean alive;
 
     /**
      * {@link Unit} iff this player died by collision, <code>null</code> otherwise.
@@ -42,14 +42,13 @@ public class Player extends Unit {
     /**
      * Creates a new player with a score of 0 points.
      *
-     * @param spriteMap
-     *            A map containing a sprite for this player for every direction.
-     * @param deathAnimation
-     *            The sprite to be shown when this player dies.
+     * @param spriteMap      A map containing a sprite for this player for every direction.
+     * @param deathAnimation The sprite to be shown when this player dies.
+     * @param startingLives The starting amount of lives.
      */
-    protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
+    protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation, int startingLives) {
         this.score = 0;
-        this.alive = true;
+        this.lives = startingLives;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
@@ -61,7 +60,7 @@ public class Player extends Unit {
      * @return <code>true</code> iff the player is alive.
      */
     public boolean isAlive() {
-        return alive;
+        return lives > 0;
     }
 
     /**
@@ -72,17 +71,6 @@ public class Player extends Unit {
      * @param isAlive
      *            <code>true</code> iff this player is alive.
      */
-    public void setAlive(boolean isAlive) {
-        if (isAlive) {
-            deathSprite.setAnimating(false);
-            this.killer = null;
-        }
-        if (!isAlive) {
-            deathSprite.restart();
-        }
-        this.alive = isAlive;
-    }
-
     /**
      * Returns the unit that caused the death of Pac-Man.
      *
@@ -127,5 +115,26 @@ public class Player extends Unit {
      */
     public void addPoints(int points) {
         score += points;
+    }
+
+
+    public void loseLife() {
+        if (lives > 0) {
+            lives--;
+            if (isAlive()) {
+                deathSprite.setAnimating(false);
+                this.killer = null;
+            } else {
+                deathSprite.restart();
+            }
+        }
+    }
+
+    public void addLife() {
+        lives++;
+    }
+
+    public int getLives() {
+        return lives;
     }
 }

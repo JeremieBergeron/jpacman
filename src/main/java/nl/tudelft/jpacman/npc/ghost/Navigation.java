@@ -1,9 +1,6 @@
 package nl.tudelft.jpacman.npc.ghost;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Direction;
@@ -64,11 +61,14 @@ public final class Navigation {
                                       Set<Square> visited, Node node, Square square) {
         for (Direction direction : Direction.values()) {
             Square target = square.getSquareAt(direction);
-            if (!visited.contains(target)
-                && (traveller == null || target.isAccessibleTo(traveller))) {
+            if (isTargetValid(traveller, target, visited)) {
                 targets.add(new Node(direction, target, node));
             }
         }
+    }
+
+    private static boolean isTargetValid(Unit traveller, Square target, Set<Square> visited) {
+        return !visited.contains(target) && (traveller == null || target.isAccessibleTo(traveller));
     }
 
     /**
@@ -85,23 +85,25 @@ public final class Navigation {
      */
     public static Unit findNearest(Class<? extends Unit> type,
                                              Square currentLocation) {
-        List<Square> toDo = new ArrayList<>();
+        Queue<Square> toDo = new LinkedList<>();
         Set<Square> visited = new HashSet<>();
 
         toDo.add(currentLocation);
+        visited.add(currentLocation); // add location when added to queue
 
         while (!toDo.isEmpty()) {
-            Square square = toDo.remove(0);
+            Square square = toDo.poll(); //remove tête de la queue
             Unit unit = findUnit(type, square);
             if (unit != null) {
                 assert unit.hasSquare();
                 return unit;
             }
-            visited.add(square);
+
             for (Direction direction : Direction.values()) {
                 Square newTarget = square.getSquareAt(direction);
-                if (!visited.contains(newTarget) && !toDo.contains(newTarget)) {
+                if (!visited.contains(newTarget)) {
                     toDo.add(newTarget);
+                    visited.add(newTarget);
                 }
             }
         }

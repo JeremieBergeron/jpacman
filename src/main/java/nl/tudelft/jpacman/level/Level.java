@@ -78,6 +78,11 @@ public class Level {
      */
     private final Set<LevelObserver> observers;
 
+    private static Square defaultStartingSquare;
+
+
+
+
     /**
      * Creates a new level for the board.
      *
@@ -107,6 +112,9 @@ public class Level {
         this.players = new ArrayList<>();
         this.collisions = collisionMap;
         this.observers = new HashSet<>();
+        if (!startPositions.isEmpty()) {
+            defaultStartingSquare = startPositions.get(0);
+        }
     }
 
     /**
@@ -263,7 +271,7 @@ public class Level {
      * Updates the observers about the state of this level.
      */
     private void updateObservers() {
-        if (!isAnyPlayerAlive()) {
+        if (!isAnyPlayerAlive()) { // 1 joueur
             for (LevelObserver observer : observers) {
                 observer.levelLost();
             }
@@ -297,19 +305,24 @@ public class Level {
      * @return The amount of pellets remaining on the board.
      */
     public int remainingPellets() {
+        int pellets = getBoardSquares().stream()
+            .flatMap(square -> square.getOccupants().stream())
+            .filter(unit -> unit instanceof Pellet)
+            .mapToInt(unit -> 1)
+            .sum();
+        assert pellets >=0;
+        return pellets;
+    }
+
+    private List<Square> getBoardSquares() {
         Board board = getBoard();
-        int pellets = 0;
+        List<Square> squares = new ArrayList<>();
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
-                for (Unit unit : board.squareAt(x, y).getOccupants()) {
-                    if (unit instanceof Pellet) {
-                        pellets++;
-                    }
-                }
+                squares.add(board.squareAt(x, y));
             }
         }
-        assert pellets >= 0;
-        return pellets;
+        return squares;
     }
 
     /**
@@ -371,5 +384,10 @@ public class Level {
          * this event is received.
          */
         void levelLost();
+    }
+
+
+    public static Square getDefaultStartingSquare() {
+        return defaultStartingSquare;
     }
 }
