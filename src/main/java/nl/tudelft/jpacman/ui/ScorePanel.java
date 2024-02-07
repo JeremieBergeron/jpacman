@@ -70,7 +70,7 @@ public class ScorePanel extends JPanel {
         for (Map.Entry<Player, JLabel> entry : scoreLabels.entrySet()) {
             Player player = entry.getKey();
             String score = "";
-            if (!player.isAlive() && player.getLives()< 1) {
+            if (!player.isAlive()) {
                 score = "You died. ";
             }
             score += scoreFormatter.format(player);
