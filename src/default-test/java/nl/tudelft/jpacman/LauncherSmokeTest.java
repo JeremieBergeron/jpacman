@@ -1,14 +1,11 @@
 package nl.tudelft.jpacman;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Smoke test launching the full game,
  * and attempting to make a number of typical moves.
@@ -52,6 +49,7 @@ public class LauncherSmokeTest {
      *
      * @throws InterruptedException Since we're sleeping in this test.
      */
+    @SuppressWarnings({"magicnumber", "methodlength", "PMD.JUnitTestContainsTooManyAsserts"})
     @Test
     void smokeTest() throws InterruptedException {
         Game game = launcher.getGame();
